@@ -1,11 +1,13 @@
-import React, { Component } from 'react'
-import { Form, Input, Button, Icon,message } from 'antd'
-import axios from 'axios'
+import React, { Component } from 'react';
+import { Form, Input, Button, Icon, } from 'antd';
+import { getUserAsync } from '../../redux/action-creator/user'
+import {setItem} from '../../utils/storage'
+import{ connect}from 'react-redux'
 import logo from './logo.png'
 import './index.less'
 
 const { Item } = Form;
-
+@connect(null, { getUserAsync })
 @Form.create()//正常应该调用两次,但是用装饰符值调用一次,最后一次它自动调
 class Login extends Component {
 
@@ -37,22 +39,18 @@ class Login extends Component {
         form.validateFields((err,values) => {
            //err校验后的错误信息    values 表单项的值
             if (!err) {//如果没有错误提示
+                const { username,password} = values;
                 //校验就成功,发送请求
-                axios.post('http://localhost:5000/api/login', { values })
+                this.props.getUserAsync(username,password)
                     .then((response) => {
-  //请求数据成功不代表响应成功,所以先判断响应状态码状态再决定是否跳转
-                        if (response.data.status === 0){
-                            this.props.history.push('/')
-                        } else {
-                            //失败提示错误
-                            message.error(response.data.msg)
-                            //错误提示完后,清空密码
-                            form.resetFields(['password'])//不传重置所有
-                        }
+                        console.log(response)
+                        //持久化存储用户数据
+                        setItem('user',response)
+                        this.props.history.push('/')
+                        form.resetFields(['password'])//不传重置所有
+
                     }).catch((err) => {
-                        console.log(err)
-                        this.props.form.resetFields(['password'])
-                        message.error('网络故障,请稍后再试')
+                       form.resetFields(['password'])
                 })
 
             }
@@ -138,4 +136,9 @@ class Login extends Component {
 
 //在Form表单中调用creat方法//第二次传组件,返回的是一个新组件,新组件包着login组件,
 //新组件就给login传form属性
+
+
+
+
+
 export default Login//Form.create是一个高阶组件的用法,作用是给组件传递form属性
