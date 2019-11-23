@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-
-export default class NotMath extends Component {
+import withCheckLogin  from '../../containers/with-check-login'
+@withCheckLogin class NotMath extends Component {
     render() {
         return (
             <div>
@@ -9,3 +9,5 @@ export default class NotMath extends Component {
         )
     }
 }
+
+export default NotMath

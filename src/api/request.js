@@ -4,7 +4,10 @@
 import axios from 'axios';
 import { message } from 'antd';
 import store from '../redux/store'
+import { removeItem } from '../utils/storage'
+import {removeUserSuccess} from '../redux/action-creator/user'
 import codeMsg from '../config/code-message';
+import history from '../utils/history'
 
 const axiosInstance = axios.create({
     baseURL: "http://localhost:5000/api", //基础路径,所有请求的公共路径
@@ -59,7 +62,14 @@ const axiosInstance = axios.create({
     (err)=>{//响应失败触发的回调函数(该函数会在各种失败的场景下触发)
         let errMsg ='';
         if(err.response){//如果有值说明服务器有响应
-          errMsg=codeMsg[err.response.status] || '未知错误';//返回对应的响应状态码,没有状态码的返回未知错误
+          errMsg = codeMsg[err.response.status] || '未知错误';//返回对应的响应状态码,没有状态码的返回未知错误
+    
+          if (err.response.status === 401) {
+           //如果状态码为401,说明token有问题,/
+            removeItem();//清空localStorage
+            store.dispatch(removeUserSuccess())//清空redux
+            history.push('./login')//重定向到login页面
+          }
         }else{//如果没有值,说明服务器没有响应
           if(err.message.indexOf('Network Error')!== -1){
               errMsg = '网络未连接'

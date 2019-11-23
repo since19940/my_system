@@ -1,20 +1,25 @@
-import Home from '../components/home'
-import Login from '../containers/login'
-import NotMach from '../components/notMach'
+import Home from "../components/home";
+import Login from "../containers/login";
+import NotMach from "../components/notMach";
 
+const authRoutes = [
+  {
+    path: "/",
+    component: Home,
+    exact: true
+  },
 
-export default [
-    {
-        path: '/',
-        component: Home,
-        exact:true
-    },
-    {
-        path: '/login',
-        component: Login,
-        exact:true
-    },
-    {
-        component:NotMach
-    }
-]
+  {
+    component: NotMach
+  }
+];
+
+const noAuthRoutes = [
+  {
+    path: "/login",
+    component: Login,
+    exact: true
+  }
+];
+
+export { authRoutes, noAuthRoutes };

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Icon, } from 'antd';
 import { getUserAsync } from '../../redux/action-creator/user'
+import withCheckLogin from '../with-check-login'
 import {setItem} from '../../utils/storage'
-import{ connect}from 'react-redux'
-import logo from './logo.png'
+import { connect } from 'react-redux'
+import logo from '../../assets/logo.png'
 import './index.less'
 
 const { Item } = Form;
+@withCheckLogin
 @connect(null, { getUserAsync })
 @Form.create()//正常应该调用两次,但是用装饰符值调用一次,最后一次它自动调
 class Login extends Component {
