@@ -45,7 +45,6 @@ class Login extends Component {
                 //校验就成功,发送请求
                 this.props.getUserAsync(username,password)
                     .then((response) => {
-                        console.log(response)
                         //持久化存储用户数据
                         setItem('user',response)
                         this.props.history.push('/')

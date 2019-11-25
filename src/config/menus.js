@@ -1,22 +1,22 @@
 
 export default [
     {
-        title: '首页',
+        title: 'title',
         icon: 'home',
         path:'/'
     },
     {
-        title:'商品',
+        title:'products',
         icon: 'skin',
         path:'/products',
         children: [
             {
-                title: '分类管理',
+                title: 'category',
                 icon: 'pic-center',
                 path:'/category'
             },
             {
-                title: '商品管理',
+                title: 'product',
                 icon: 'database',
                 path:'/product'
             }
@@ -24,32 +24,32 @@ export default [
     },
 
     {
-        title: '用户管理',
+        title: 'user',
         icon: 'user',
         path:'/user'
     },
     {
-        title:' 权限管理',
+        title:'role',
         icon: 'key',
         path:'/role'
     },
     {
-        title:'图形图表',
+        title:'charts',
         icon: 'fund',
         path:'/charts',
         children: [
             {
-                title: '柱状图',
+                title: 'line',
                 icon: 'bar-chart',
                 path:'/charts/bar'
             },
             {
-                title: '折线图',
+                title: 'bar',
                 icon: 'line-chart',
                 path:'/charts/line'
             },
             {
-                title: '饼状图',
+                title: 'pie',
                 icon: 'pie-chart',
                 path:'/charts/pie'
             }

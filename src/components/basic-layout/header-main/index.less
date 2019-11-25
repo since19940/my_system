@@ -1,0 +1,44 @@
+.header-main{
+    height: 80px;
+    background: #fff;
+    .header-main-top{
+        width: 100%;
+        line-height: 50px;
+        text-align: right;
+        padding-right: 10px;
+        border-bottom: 1px solid #1DA57A;
+        .lang-btn{
+           margin: 0 10px;
+        }
+    }
+
+    .header-main-bottom{
+        line-height: 30px;
+        display: flex;
+        padding-right: 17px;
+        h2{
+            flex:1;
+            text-align: center;
+            font-weight: 400;
+            position: relative;
+            &::before{
+                content: '';
+                position: absolute;
+                left: 45%;
+                bottom: -38px;
+                width: 0;
+                height: 0;
+                display: block;
+                border-top:20px solid #fff;
+                border-right:20px solid transparent;
+                border-left:20px solid transparent;
+                border-bottom:20px solid transparent
+            }
+        }
+        span{
+            flex:2;
+            text-align: right;
+            font-size:15px;
+        }
+    }
+}

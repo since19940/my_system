@@ -4,6 +4,7 @@
 
 import axiosInstance from './request';
 
+//请求登录
 export const reqLogin = (username,password) => axiosInstance({
         method: 'POST',
         url: '/login',
@@ -19,10 +20,13 @@ export const reqCategories = () => axiosInstance({
         url: '/category/get'
     })
 
+    //请求添加分类
 export const reqCategoriesAdd = (categoryName) => axiosInstance({
         method: 'POST',
         url: '/category/add',
         data: {
             categoryName
         } 
-    })
+})
+    
+

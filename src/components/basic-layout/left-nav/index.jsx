@@ -1,91 +1,100 @@
-import React, { Component } from 'react'
-import { Menu, Icon } from 'antd';
-import { Link,withRouter } from 'react-router-dom'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Menu, Icon } from "antd";
+import { withTranslation } from "react-i18next";
+/*
+  需求：给非路由组件传递路由组件的三大属性
+  解决：withRouter是一个高阶组件
+  作用：给非路由组件传递路由组件的三大属性
+*/
+import { Link, withRouter } from "react-router-dom";
+import menus from "../../../config/menus";
 
-import menus from '../../../config/menus'
-import logo from '../../../assets/logo.png'
-import './index.less'
+import logo from "../../../assets/logo.png";
+import "./index.less";
 
 const { SubMenu } = Menu;
 
+@withTranslation()
 @withRouter
 class LeftNav extends Component {
-    state = {
-        menus:[]
-    }
+  static propTypes = {
+    isDisplay: PropTypes.bool.isRequired
+  };
 
-    createMenus = (menus) => {
-        return   menus.map((menu) => {
-            if (menu.children) {
-             return  <SubMenu
-                 key={menu.path}
-                 title={
-                     <span>
-                         <Icon type={menu.icon}/>
-                         <span>{menu.title}</span>
-                     </span>
-                 }
-             >
-                 {menu.children.map((cMenu) => this.createCMenus(cMenu))}
-             </SubMenu>
-             } else {
-                return  this.createCMenus(menu)
-             }
-         })
-    }
-
-
-    componentDidMount() {
-        this.setState({
-            menus:this.createMenus(menus)
-        } )
-    }
-
-    createCMenus = (menus) => {
-        return <Menu.Item key={menus.path}>
-        <Link to={menus.path}>
-            <Icon type={menus.icon} />
-            <span>{menus.title}</span>
-        </Link>
-    </Menu.Item>
-    }
-
-    findOpenKey = (menus, pathname) => {
-
-        for (let index = 0; index < menus.length; index++) {
-            const menu = menus[index];
-            if (menu.children) {
-                const cMenum = menu.children.find((cMenu) => cMenu.path === pathname)
-                if (cMenum) {
-                    return menu.path;
-                }
-            }
-        }
-        menus.forEach((menu) => {
-           
-        })
-    }
-   
-
-    render() {
-        const { pathname } = this.props.location
-       const openKey=this.findOpenKey(menus,pathname)
+  createMenus = menus => {
+    const { t } = this.props;
+    return menus.map(menu => {
+      if (menu.children) {
         return (
-            <div>
-                <div className="layout-logo">
-                    <img src={logo} alt="logo" />
-                    <h3>后台管理系统</h3>
-                </div>
-                <Menu theme="dark"
-                    defaultSelectedKeys={[pathname]}
-                    defaultOpenKeys={[openKey]}
-                    mode="inline">
-                    { this.state.menus}
-                </Menu> 
-            </div>
-        )
-    }
-}
+          <SubMenu
+            key={menu.path}
+            title={
+              <span>
+                <Icon type={menu.icon} />
+                <span>{t("layout.leftNav." + menu.title)}</span>
+              </span>
+            }
+            >
+                {menu.children.map(cMenu => this.createCMenus(cMenu))}
+            </SubMenu>
+        );
+      } else {
+        return this.createCMenus(menu);
+      }
+    });
+  };
 
+  createCMenus = menu => {
+    const { t } = this.props;
+    return (
+      <Menu.Item key={menu.path}>
+        <Link to={menu.path}>
+          <Icon type={menu.icon} />
+          <span>{t("layout.leftNav." + menu.title)}</span>
+        </Link>
+      </Menu.Item>
+    );
+  };
+
+  findOpenKey = (menus, pathname) => {
+    for (let index = 0; index < menus.length; index++) {
+      const menu = menus[index];
+      if (menu.children) {
+        const cMenu = menu.children.find(cMenu => cMenu.path === pathname);
+        if (cMenu) {
+          return menu.path;
+        }
+      }
+    }
+  };
+
+  render() {
+    const { pathname } = this.props.location;
+    const openKey = this.findOpenKey(menus, pathname);
+    const { t } = this.props;
+    // 重复调用
+    const menusList = this.createMenus(menus);
+
+    return (
+      <div>
+        <div className="layout-logo">
+          <img src={logo} alt="logo" />
+          <h3 style={{ display: this.props.isDisplay ? "block" : "none" }}>
+            {t("layout.leftNav.title")}
+          </h3>
+        </div>
+        <Menu
+          theme="dark"
+          defaultSelectedKeys={[pathname]}
+          defaultOpenKeys={[openKey]}
+          mode="inline"
+        >
+          {menusList}
+        </Menu>
+      </div>
+    );
+  }
+}
 
 export default LeftNav;
