@@ -90,7 +90,7 @@ class HeaderMain extends Component {
     }
 
 
-    UNSAFE_componentWillUnMount() {
+    componentWillUnmount() {
         screenfull.off('change', this.change)
         clearInterval(this.timer)
 
