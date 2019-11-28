@@ -70,7 +70,8 @@ class LeftNav extends Component {
   };
 
   render() {
-    const { pathname } = this.props.location;
+    let { pathname } = this.props.location;
+    pathname = pathname.startsWith('/product') ? '/product' : pathname;
     const openKey = this.findOpenKey(menus, pathname);
     const { t } = this.props;
     // 重复调用

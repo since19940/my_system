@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { Card, Icon, Button, Table, Modal } from 'antd';
 import { connect } from 'react-redux'
-import { getCategoriesAsync, reqCategoriesAddAsync,updateCategoryAsync } from '../../redux/action-creator/categories'
+import { getCategoriesAsync, reqCategoriesAddAsync, updateCategoryAsync } from '../../redux/action-creator/categories'
 
 import AddCategoryForm from './add-category-form'
-import UpdateCategoryForm from'./update-category-form'
+import UpdateCategoryForm from './update-category-form'
 
 
 @connect(
     (state) => ({ categories: state.categories }),
-    { getCategoriesAsync, reqCategoriesAddAsync ,updateCategoryAsync}//用connect将该
+    { getCategoriesAsync, reqCategoriesAddAsync, updateCategoryAsync }//用connect将该
 )
 
 class Category extends Component {
@@ -17,7 +17,7 @@ class Category extends Component {
     state = {
         AddCategoryVisible: false,
         updateCategoryVisible: false,
-        category:{}, //选中的某个分类数据
+        category: {}, //选中的某个分类数据
     }
 
     //修改分类弹窗的ok事件
@@ -26,9 +26,9 @@ class Category extends Component {
             if (!err) {
                 const { categoryName } = values
                 const categoryId = this.state.category._id;
-                await this.props.updateCategoryAsync(categoryId,categoryName)
+                await this.props.updateCategoryAsync(categoryId, categoryName)
                 this.hidden('updateCategory')()
-            }  
+            }
         })
 
     }
@@ -42,23 +42,23 @@ class Category extends Component {
                 updateCategoryVisible: true,
                 category //将拿到的值,更新到状态中
             })
-    
-       }
+
+        }
 
     }
 
 
     hidden = name => {//点击取消
         return () => {
-          // 清空表单数据
-          this.setState({
-            [name + "Visible"]: false //对话框隐藏
-          });
-          setTimeout(() => {
-            this[name + "Form"].props.form.resetFields(); //清空表单内数据
-          }, 500);
+            // 清空表单数据
+            this.setState({
+                [name + "Visible"]: false //对话框隐藏
+            });
+            setTimeout(() => {
+                this[name + "Form"].props.form.resetFields(); //清空表单内数据
+            }, 500);
         };
-      };
+    };
 
 
 
@@ -104,7 +104,7 @@ class Category extends Component {
                     <Button type="link" onClick={this.showUpdateCategory(category)}>修改分类</Button>
                     <Button type="link">删除分类</Button>
                 </div>
-            } 
+            }
         },
 
     ]
@@ -115,7 +115,7 @@ class Category extends Component {
         const { AddCategoryVisible, updateCategoryVisible, category } = this.state
 
         return (
-            
+
             <div>
                 <Card title="分类列表"
                     extra={

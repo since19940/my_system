@@ -108,7 +108,7 @@ class HeaderMain extends Component {
         for (let index = 0; index < menus.length; index++) {
             const menu = menus[index];//拿到数组中的每一个对象
             if (menu.children) {
-                const cMenu=menu.children.find((cMenu) => cMenu.path === pathname)
+                const cMenu=menu.children.find((cMenu) => pathname.startsWith(cMenu.path))
                 //如果该对象上有children的,在其children上找对应的对象,将对应对象的pathname对比当前所在的路径地址
                 if (cMenu) {//如果找打一致的那个对象
                     //就将找到的这个对象的title名赋值给上面的title
