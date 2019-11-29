@@ -1,19 +1,29 @@
 import React, { Component } from "react";
-import { Card, Button, Table, Radio, Modal } from "antd";
-
+import { Card, Button, Table, Radio, Modal,message } from "antd";
+import { connect } from "react-redux";
+import dayjs from "dayjs";
+import {getRolesAsync,addRoleAsync,updateRoleAsync} from '../../redux/action-creator/role'
 import AddRoleForm from "./add-role-form";
 import UpdateRoleForm from "./update-role-form";
 
 const RadioGroup = Radio.Group;
 
+
+@connect((state) => ({roles:state.roles,username:state.user.user.username}),{getRolesAsync,addRoleAsync,updateRoleAsync})
 class Role extends Component {
   state = {
     value: "", //单选的默认值，也就是选中的某个角色的id值
-    roles: [], //权限数组
     addRoleModalVisible: false, //是否展示创建角色的标识
     updateRoleModalVisible: false, //是否展示设置角色的标识
-    isDisabled: false
+    isDisabled: true
   };
+
+
+  componentDidMount(){
+    if (!this.props.roles.length) {
+      this.props.getRolesAsync()
+    }
+  }
 
   columns = [
     {
@@ -26,11 +36,18 @@ class Role extends Component {
     },
     {
       title: "创建时间",
-      dataIndex: "createTime"
+      dataIndex: "createTime",
+      render: (time) => 
+        dayjs(time).format("YYYY-MM-DDM HH:mm:ss")
+    
     },
     {
       title: "授权时间",
-      dataIndex: "authTime"
+      dataIndex: "authTime",
+      render: time =>
+        time && dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+     
+      
     },
     {
       title: "授权人",
@@ -41,7 +58,8 @@ class Role extends Component {
   onRadioChange = e => {
     console.log("radio checked", e.target.value);
     this.setState({
-      value: e.target.value
+      value: e.target.value,
+      isDisabled:false
     });
   };
 
@@ -52,19 +70,49 @@ class Role extends Component {
   };
 
   //创建角色的回调函数
-  addRole = () => {};
+  addRole = () => {
+    const form = this.addRoleForm.props.form
+    form.validateFields(async (err,values) => {
+      if (!err) {
+        const { name } = values
+        await this.props.addRoleAsync(name)
+        message.success("角色创建成功")
+        form.resetFields()
+        this.setState({
+          addRoleModalVisible:false
+        })
+      }
+    })
+  };
   //设置角色权限的回调函数
-  updateRole = () => {};
+  updateRole = () => {
+    const form = this.updateRoleForm.props.form
+    form.validateFields(async (err, values) => {
+      if (!err) {
+        const menus  = values
+        const roleId  = this.state.value
+        const authName = this.props.username
+        await this.props.updateRoleAsync({ menus:JSON.stringify(menus.menus), roleId, authName })
+        message.success("权限更新成功")
+        form.resetFields()
+
+        this.setState({
+          updateRoleModalVisible:false
+        })
+      }
+    })
+
+  };
 
   render() {
     const {
-      roles,
       value,
       isDisabled,
       addRoleModalVisible,
       updateRoleModalVisible
     } = this.state;
-
+    const { roles } = this.props
+    const role = roles.find((role) => role._id === value)
     return (
       <Card
         title={
@@ -124,6 +172,7 @@ class Role extends Component {
         >
           <UpdateRoleForm
             wrappedComponentRef={form => (this.updateRoleForm = form)}
+            role={role}
           />
         </Modal>
       </Card>

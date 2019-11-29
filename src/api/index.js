@@ -94,3 +94,24 @@ export const reqSearchProductStatus = ({searchType,searchValue,pageNum,pageSize}
         [searchType]:searchValue //搜索依据:搜索对应的值
     }
 })
+
+export const reqGetRole = () => axiosInstance({
+    method: "GET",
+    url:"/role/get"
+})
+
+export const reqAddRole = (name) => axiosInstance({
+    method: "POST",
+    url: "/role/add",
+    data: {
+        name
+    }
+})
+
+export const reqUpdateRole = ({roleId,authName,menus}) => axiosInstance({
+    method: "POST",
+    url: "/role/update",
+    data: {
+        roleId,authName,menus
+    }
+})
